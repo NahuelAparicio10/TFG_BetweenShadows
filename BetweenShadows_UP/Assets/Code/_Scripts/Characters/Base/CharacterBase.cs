@@ -1,15 +1,22 @@
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterStats))]
 public class CharacterBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public CharacterStats stats { get; private set; }
+
+    protected virtual void Awake()
+    {
+        stats = GetComponent<CharacterStats>();
+    }
+
+    protected virtual void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         
     }
