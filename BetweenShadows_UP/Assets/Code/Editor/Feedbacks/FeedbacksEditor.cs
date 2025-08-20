@@ -26,6 +26,11 @@ namespace FeedbacksNagu
         {
             var container = (FeedbackContainer)target;
 
+            if (GUILayout.Button("PlayFeedbacks"))
+            {
+                container.PlayFeedbacks();
+            }
+            
             if (GUILayout.Button("Add Feedback"))
             {
                 var menu = new GenericMenu();

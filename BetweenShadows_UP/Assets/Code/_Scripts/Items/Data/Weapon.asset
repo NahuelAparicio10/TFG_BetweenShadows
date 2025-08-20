@@ -20,5 +20,8 @@ MonoBehaviour:
   weight: 2
   maxStack: 1
   equipSlot: 0
-  modifiers: []
+  modifiers:
+  - statTypeAffected: 0
+    type: 0
+    value: 0
   prefab: {fileID: 0}
