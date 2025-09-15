@@ -1,16 +1,32 @@
+using System;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Rigidbody _rb;
+    private Transform _transform;
+
+    public void GetReferences(GameObject player)
+    {
+        _rb = player.GetComponent<Rigidbody>();
+        _transform = player.transform;
+    }
+    
+    public void HandleAllMovement()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ApplyRotation(Vector3 dir, float speed)
     {
-        
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        _rb.MoveRotation(Quaternion.Slerp(_transform.rotation, targetRot, speed * Time.deltaTime));
     }
+
+    #region  RootMotion
+
+    
+
+    #endregion
+
 }

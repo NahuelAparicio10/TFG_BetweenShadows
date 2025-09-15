@@ -15,9 +15,7 @@ public class CharacterHealthSystem : MonoBehaviour, IDamageable, ICurable
     public event Action<float, float> OnHealthChanged;
     public event Action<float> OnHeal;
     public event Action<float> OnDamageTaken;
-    
     public event Action OnDeath;
-    
     #endregion
     
     protected void Awake()

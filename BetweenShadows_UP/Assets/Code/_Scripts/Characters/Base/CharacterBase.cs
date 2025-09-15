@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+// Base Class for any character in this game
+
 [RequireComponent(typeof(CharacterStats))]
 public class CharacterBase : MonoBehaviour
 {
@@ -16,8 +18,17 @@ public class CharacterBase : MonoBehaviour
         
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        
+    }
+
+    protected virtual void LateUpdate()
+    {
     }
 }
