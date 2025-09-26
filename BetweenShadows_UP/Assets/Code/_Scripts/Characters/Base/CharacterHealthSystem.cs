@@ -21,8 +21,12 @@ public class CharacterHealthSystem : MonoBehaviour, IDamageable, ICurable
     protected void Awake()
     {
         _stats = GetComponent<CharacterStats>();
-        _healthStat = _stats.GetStat(Enums.StatType.Health);
-        _defenseStat = _stats.GetStat(Enums.StatType.Defense);
+    }
+
+    protected virtual void Start()
+    {
+        _healthStat = _stats.GetStat(EnumsNagu.StatType.Health);
+        _defenseStat = _stats.GetStat(EnumsNagu.StatType.Defense);
         _currentHealth = _healthStat.Value;
     }
     

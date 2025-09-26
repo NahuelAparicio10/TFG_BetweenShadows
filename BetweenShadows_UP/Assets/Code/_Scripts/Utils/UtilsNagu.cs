@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Utils
+public class UtilsNagu
 {
     public static Vector3 GetCameraForwardNormalized(Camera cam)
     {

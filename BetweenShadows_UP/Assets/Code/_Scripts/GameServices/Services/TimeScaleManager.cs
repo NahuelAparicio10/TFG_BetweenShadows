@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+
+//-- This manages slow motion requests for feedbacks or whatever we want
+
 public class TimeScaleManager : MonoBehaviour, IGameServices
 {
     private class SlowRequest

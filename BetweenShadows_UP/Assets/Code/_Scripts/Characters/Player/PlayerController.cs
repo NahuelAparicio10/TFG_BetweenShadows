@@ -1,25 +1,26 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : CharacterBase
 {
-    private CharacterHealthSystem _healthSystem;
-    private PlayerInputs _inputs;
-    private PlayerMovement _movement;
+    private PlayerContext _ctx;
     [SerializeField] private PlayerHUD _hud;
+    private EnumsNagu.CharacterState _currentState;
     
     protected override void Awake()
     {
         base.Awake();
-        _inputs = GetComponent<PlayerInputs>();
-        _healthSystem = GetComponent<CharacterHealthSystem>();
+        
+        _ctx = new PlayerContext(gameObject, 
+            GetComponent<PlayerInputs>(), 
+            GetComponent<CharacterStats>(), 
+            GetComponent<CharacterHealthSystem>(), 
+            new PlayerMovement());
     }
 
     protected override void Start()
     {
         base.Start();
-        InitializeSubscriptions();
     }
 
     protected override void Update()
@@ -29,7 +30,7 @@ public class PlayerController : CharacterBase
 
     protected override void FixedUpdate()
     {
-        _movement.HandleAllMovement();
+        _ctx.Movement.HandleAllMovement();
     }
 
     protected override void LateUpdate()
@@ -37,19 +38,5 @@ public class PlayerController : CharacterBase
         base.LateUpdate();
     }
 
-    private void InitializeSubscriptions()
-    {
-        _healthSystem.OnHealthChanged += HealthChanged;
-    }  
 
-    private void HealthChanged(float current, float max)
-    {
-        _hud.UpdateHealthBar(current, max);
-    }
-
-    private void OnDestroy()
-    {
-        _healthSystem.OnHealthChanged -= HealthChanged;
-
-    }
 }

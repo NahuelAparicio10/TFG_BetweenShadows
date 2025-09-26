@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+// -- Interface for Damageable Components such as PlayerHealth
 public interface IDamageable
 {
     void TakeDamage(float damage);

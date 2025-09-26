@@ -17,5 +17,11 @@ public static class GameBootstrap
         GameServices.Register<TimeScaleManager>(timeManager);
         Object.DontDestroyOnLoad(timeGo);
         
+        // --- InputService ---
+        var inputGo = new GameObject("InputService");
+        var inputService = inputGo.AddComponent<InputService>();
+        GameServices.Register<InputService>(inputService);
+        Object.DontDestroyOnLoad(inputGo);
+
     }
 }
