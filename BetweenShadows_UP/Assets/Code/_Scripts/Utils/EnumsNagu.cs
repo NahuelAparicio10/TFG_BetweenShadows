@@ -11,8 +11,4 @@ public class EnumsNagu
     
     public enum HitType { Normal, Knockback, Knockdown }
     
-    #region Characters States
-    public enum CharacterState { Idle, Moving, Attacking, Stuned, Dead }
-    public enum CharacterMovementState { None, Walking, Running }
-    #endregion
 }

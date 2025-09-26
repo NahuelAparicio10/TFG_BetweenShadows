@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
 
 public class PlayerController : CharacterBase
 {
     private PlayerContext _ctx;
     [SerializeField] private PlayerHUD _hud;
-    private EnumsNagu.CharacterState _currentState;
     
     protected override void Awake()
     {
@@ -21,6 +19,7 @@ public class PlayerController : CharacterBase
     protected override void Start()
     {
         base.Start();
+        _stateMachine.Set(new PlayerLocomotionState(_stateMachine, _ctx));
     }
 
     protected override void Update()
@@ -30,7 +29,7 @@ public class PlayerController : CharacterBase
 
     protected override void FixedUpdate()
     {
-        _ctx.Movement.HandleAllMovement();
+        base.FixedUpdate();
     }
 
     protected override void LateUpdate()
