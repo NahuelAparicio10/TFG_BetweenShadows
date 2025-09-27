@@ -9,7 +9,7 @@ namespace FeedbacksNagu
         public float frequency = 10f;
 
         private Vector3 _originalPosition;
-        private bool _isShaking = false;
+        //private bool _isShaking = false;
 
         //TODO
 

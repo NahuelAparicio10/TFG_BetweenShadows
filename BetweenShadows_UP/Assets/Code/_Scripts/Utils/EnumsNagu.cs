@@ -7,7 +7,7 @@ public class EnumsNagu
     public enum EquipSlot { Weapon, Helmet, ChestArmor, LowerArmor, Backpack, Necklace, Ring }
     #endregion
     
-    public enum StatType { Health, Stamina, Speed, Defense, Attack, Weight }
+    public enum StatType { Health, Defense, Stamina, Speed, Attack, Weight }
     
     public enum HitType { Normal, Knockback, Knockdown }
     

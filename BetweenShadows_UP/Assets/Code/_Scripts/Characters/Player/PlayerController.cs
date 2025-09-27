@@ -1,19 +1,22 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputs))]
 public class PlayerController : CharacterBase
 {
     private PlayerContext _ctx;
+    [SerializeField] private PlayerMovement _movement;
     [SerializeField] private PlayerHUD _hud;
     
     protected override void Awake()
     {
         base.Awake();
-        
         _ctx = new PlayerContext(gameObject, 
             GetComponent<PlayerInputs>(), 
             GetComponent<CharacterStats>(), 
             GetComponent<CharacterHealthSystem>(), 
-            new PlayerMovement());
+            _movement,
+            GetComponent<CharacterAnimation>());
+        _movement.SetContextAndInitialize(_ctx);
     }
 
     protected override void Start()

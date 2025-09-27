@@ -3,7 +3,7 @@ using UnityEngine;
 
 // Base Class for any character in this game
 
-[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(CharacterStats), typeof(Rigidbody))]
 public class CharacterBase : MonoBehaviour
 {
     protected StateMachine _stateMachine;

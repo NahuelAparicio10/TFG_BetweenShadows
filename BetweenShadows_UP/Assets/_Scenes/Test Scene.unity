@@ -1292,7 +1292,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &1566601666861916101
 MonoBehaviour:
@@ -1306,6 +1306,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e7bd4f24731c341b0a9135dfa7d9b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _movement:
+    _sprintSpeed: 2
+    _acceleration: 18
+    _decceleration: 22
+    _rotationSpeed: 12
+    _groundChecker:
+      _groundLM:
+        serializedVersion: 2
+        m_Bits: 0
+      _castRadius: 0.17
+      _castDistance: 1.1
+      _maxSlopeAngle: 60
+    _useRootMotion: 0
+    _rootMotionBlend: 1
   _hud:
     _lifeBar: {fileID: 0}
     _stamina: {fileID: 0}
@@ -1324,8 +1338,10 @@ MonoBehaviour:
   _baseStats:
   - baseValue: 100
     statTypeAffected: 0
-  - baseValue: 0
+  - baseValue: 5
     statTypeAffected: 1
+  - baseValue: 5
+    statTypeAffected: 3
 --- !u!114 &1566601666861916103
 MonoBehaviour:
   m_ObjectHideFlags: 0
