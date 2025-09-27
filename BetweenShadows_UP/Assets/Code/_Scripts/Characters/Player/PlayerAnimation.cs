@@ -8,4 +8,9 @@ public class PlayerAnimation : CharacterAnimation
         _animator.SetFloat("InputX", inputMovement.x);
         _animator.SetFloat("InputY", inputMovement.y);
     }
+
+    public void SetSpeed(float speed)
+    {
+        _animator.SetFloat("speed", speed);
+    }
 }

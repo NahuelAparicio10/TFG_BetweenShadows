@@ -15,8 +15,14 @@ public class PlayerController : CharacterBase
             GetComponent<CharacterStats>(), 
             GetComponent<CharacterHealthSystem>(), 
             _movement,
-            GetComponent<CharacterAnimation>());
+            GetComponent<PlayerAnimation>());
         _movement.SetContextAndInitialize(_ctx);
+
+        GetComponent<RootMotionRelay>().OnRootMotion += (dp, dr) =>
+        {
+            _movement.AccumulateRootDelta(dp);
+            _movement.AccumulateRootRotation(dr);
+        };
     }
 
     protected override void Start()

@@ -118,26 +118,8 @@ public class PlayerMovement : ICharacterMovement
     #endregion
 
     #region Root Motion
-    
-    private void OnAnimatorMove()
-    {
-        if (!_useRootMotion) return;
-        HandleRootMotion();
-    }
-
-    // -- The Root Motion Movement also moves the Rigidbody for collisions etc.
-
-    private void HandleRootMotion()
-    {
-        _rootDelta += _ctx.Animation.Animator.deltaPosition;
-        // Vector3 rootMotion = _rb.position + GetAdjustedRootMotion();
-
-        //  _rb.MovePosition(rootMotion);
-
-        //   Quaternion newRotation = _rb.rotation * _ctx.Animation.Animator.deltaRotation;
-
-        //   _rb.MoveRotation(newRotation);
-    }
+    public void AccumulateRootDelta(Vector3 delta) { _rootDelta += delta; }
+    public void AccumulateRootRotation(Quaternion deltaRot) { /* si quieres rotación por clip */ }
 
     #endregion
 

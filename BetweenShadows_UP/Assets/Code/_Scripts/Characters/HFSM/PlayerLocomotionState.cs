@@ -27,6 +27,7 @@ public class PlayerLocomotionState : BaseState<PlayerContext>
         }
         
         _ctx.Movement.SetDesiredDirection(_ctx.Inputs.GetDirectionNormalized());
+        _ctx.Animation.SetSpeed(_ctx.Inputs.GetDirectionNormalized().magnitude);
         // Sprint??
         
     }
