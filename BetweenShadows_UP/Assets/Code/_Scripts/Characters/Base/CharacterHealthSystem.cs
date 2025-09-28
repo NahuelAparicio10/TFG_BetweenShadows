@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class CharacterHealthSystem : MonoBehaviour, IDamageable, ICurable
+public class CharacterHealthSystem : IDamageable, ICurable
 {
     protected CharacterStats _stats;
     protected CharacterStat _healthStat;
@@ -11,18 +11,17 @@ public class CharacterHealthSystem : MonoBehaviour, IDamageable, ICurable
     public float MaxHealth => _healthStat.Value;
     
     #region Event Actions
-
     public event Action<float, float> OnHealthChanged;
     public event Action<float> OnHeal;
     public event Action<float> OnDamageTaken;
     public event Action OnDeath;
     #endregion
-    
-    protected void Awake()
+
+    public void Initialize(CharacterStats stats)
     {
-        _stats = GetComponent<CharacterStats>();
-        _healthStat = _stats.GetStat(Enums.StatType.Health);
-        _defenseStat = _stats.GetStat(Enums.StatType.Defense);
+        _stats = stats;
+        _healthStat = _stats.GetStat(EnumsNagu.StatType.Health);
+        _defenseStat = _stats.GetStat(EnumsNagu.StatType.Defense);
         _currentHealth = _healthStat.Value;
     }
     

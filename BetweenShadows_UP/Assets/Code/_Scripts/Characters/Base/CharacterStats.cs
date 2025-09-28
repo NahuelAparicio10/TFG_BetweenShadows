@@ -8,11 +8,11 @@ using System.Collections.Generic;
 public class CharacterStats : MonoBehaviour
 {
     [SerializeField] private List<CharacterStat> _baseStats = new List<CharacterStat>();
-    private Dictionary<Enums.StatType, CharacterStat> _statsDict;
+    private Dictionary<EnumsNagu.StatType, CharacterStat> _statsDict;
     
     private void Awake()
     {
-        _statsDict = new Dictionary<Enums.StatType, CharacterStat>();
+        _statsDict = new Dictionary<EnumsNagu.StatType, CharacterStat>();
         foreach (var entry in _baseStats)
         {
             _statsDict.TryAdd(entry.statTypeAffected, entry);
@@ -20,7 +20,7 @@ public class CharacterStats : MonoBehaviour
     }
     
     // Returns the value of the stat
-    public float GetStatValue(Enums.StatType type)
+    public float GetStatValue(EnumsNagu.StatType type)
     {
         if (_statsDict.TryGetValue(type, out var stat))
         {
@@ -31,7 +31,7 @@ public class CharacterStats : MonoBehaviour
     }
     
     // Returns the CharacterStat object so you can add modifiers
-    public CharacterStat GetStat(Enums.StatType type)
+    public CharacterStat GetStat(EnumsNagu.StatType type)
     {
         if (_statsDict.TryGetValue(type, out var stat))
         {
@@ -43,7 +43,7 @@ public class CharacterStats : MonoBehaviour
     }
     
     // Adds a modifier to the specific stat
-    public void AddModifier(Enums.StatType type, StatModifier modifier)
+    public void AddModifier(EnumsNagu.StatType type, StatModifier modifier)
     {
         if (_statsDict.TryGetValue(type, out var stat))
             stat.AddModifier(modifier);
@@ -52,7 +52,7 @@ public class CharacterStats : MonoBehaviour
     }
     
     // Deletes a modifier from a stat
-    public void RemoveModifier(Enums.StatType type, StatModifier modifier)
+    public void RemoveModifier(EnumsNagu.StatType type, StatModifier modifier)
     {
         if (_statsDict.TryGetValue(type, out var stat))
             stat.RemoveModifier(modifier);

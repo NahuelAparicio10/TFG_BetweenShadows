@@ -3,29 +3,28 @@ using UnityEngine;
 
 // Base Class for any character in this game
 
-[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(CharacterStats), typeof(Rigidbody))]
 public class CharacterBase : MonoBehaviour
 {
-    public CharacterStats stats { get; private set; }
+    protected StateMachine _stateMachine;
 
     protected virtual void Awake()
     {
-        stats = GetComponent<CharacterStats>();
+        _stateMachine = new StateMachine();
     }
 
     protected virtual void Start()
     {
-        
     }
 
     protected virtual void Update()
     {
-        
+        _stateMachine.CurrentState.Tick(Time.deltaTime);
     }
 
     protected virtual void FixedUpdate()
     {
-        
+        _stateMachine.CurrentState.FixedTick(Time.fixedDeltaTime);
     }
 
     protected virtual void LateUpdate()

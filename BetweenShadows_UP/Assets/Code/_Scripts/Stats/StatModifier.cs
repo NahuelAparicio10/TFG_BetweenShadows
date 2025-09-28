@@ -6,7 +6,7 @@ public enum StatModifierType { Flat = 100, PercentAdd = 200, PercentMult = 300 }
 [Serializable]
 public class StatModifier
 {
-    public Enums.StatType statTypeAffected;
+    public EnumsNagu.StatType statTypeAffected;
     public StatModifierType type;
     [SerializeField] public float value;
     public readonly int order;

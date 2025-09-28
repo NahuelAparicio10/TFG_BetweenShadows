@@ -4,7 +4,7 @@
 [Serializable]
 public class BuffEffect
 {
-    public Enums.StatType statType;
+    public EnumsNagu.StatType statType;
     public StatModifierType modifierType;
     public float baseValue;
     public float duration;
