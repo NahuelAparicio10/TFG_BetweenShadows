@@ -15,7 +15,6 @@ public class GroundChecker
     private float _currentSlopeAngle;
     private bool _isGrounded;
     private RaycastHit _hit;
-    
 
     public void CheckGround(Transform transform)
     {

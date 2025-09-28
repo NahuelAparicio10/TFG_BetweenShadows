@@ -27,12 +27,23 @@ public class PlayerMovement : ICharacterMovement
     private Vector3 _planarVelocity; // Axis X Z
     private Vector3 _rootDelta;
     
+    #region Properties
+    public bool IsSprinting => _isSprinting;
+    public float SprintBonus => _sprintSpeed;
+    public bool IsLockedOn => _lockOnTarget != null;
+    public float RunSpeed => _ctx.Stats.GetStatValue(EnumsNagu.StatType.Speed);
+    public float SprintSpeed => RunSpeed + _sprintSpeed;
+    public float CurrentPlanarSpeed => new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.z).magnitude;
+    #endregion
+   
     public void SetContextAndInitialize(PlayerContext ctx)
     {
         _ctx = ctx;
         _rb = _ctx.Owner.GetComponent<Rigidbody>();
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _transform = _ctx.Transform;
+
+        _ctx.Inputs.OnSprint += SetSprint;
     }
     
     public void HandleAllMovement()
@@ -73,7 +84,7 @@ public class PlayerMovement : ICharacterMovement
         _desiredDir = Vector3.zero;
         _rootDelta = Vector3.zero;
     }
-    private float TargetSpeed()
+    public float TargetSpeed()
     {
         float speed = _ctx.Stats.GetStatValue(EnumsNagu.StatType.Speed);
         if(_isSprinting)
@@ -84,8 +95,11 @@ public class PlayerMovement : ICharacterMovement
         return speed;
     }
 
-    public void SetDesiredDirection(Vector3 dir) => _desiredDir = dir.sqrMagnitude > 0.001f ? dir.normalized : Vector3.zero;
-    public void SetSprint(bool sprint) => _isSprinting = sprint;
+    public void SetDesiredDirection(Vector3 dir)
+    {
+        _desiredDir = dir.sqrMagnitude > 0.001f ? Vector3.ClampMagnitude(dir, 1f) : Vector3.zero;
+    }
+    public void SetSprint(bool isSprinting) => _isSprinting = isSprinting;
     public void SetLockOn(Transform target) => _lockOnTarget = target;
     public void SetRootMotion(bool enabled) => _useRootMotion = enabled;
 
@@ -119,7 +133,7 @@ public class PlayerMovement : ICharacterMovement
 
     #region Root Motion
     public void AccumulateRootDelta(Vector3 delta) { _rootDelta += delta; }
-    public void AccumulateRootRotation(Quaternion deltaRot) { /* si quieres rotación por clip */ }
+    public void AccumulateRootRotation(Quaternion deltaRot) { /* RM Roation */ }
 
     #endregion
 

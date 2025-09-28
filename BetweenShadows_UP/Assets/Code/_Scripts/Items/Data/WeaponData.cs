@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Items/WeaponData")]
 public class WeaponData : EquipableItemData
 {

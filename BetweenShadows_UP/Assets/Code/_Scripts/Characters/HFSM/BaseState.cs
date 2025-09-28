@@ -17,4 +17,5 @@ public abstract class BaseState<TContext> : IState where TContext : CharacterCon
     public virtual void Tick(float dt) { }
     public virtual void FixedTick(float fixedDt) { }
     public virtual void HandleCommand(ICommand command) { }
+    public virtual void CheckToConsumeActions() {}
 }

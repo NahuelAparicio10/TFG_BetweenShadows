@@ -2,9 +2,8 @@
 
 public class PlayerAttackState : BaseState<PlayerContext>
 {
-    public PlayerAttackState(StateMachine fsm, PlayerContext ctx) : base(fsm, ctx)
-    {
-    }
+    public PlayerAttackState(StateMachine fsm, PlayerContext ctx) : base(fsm, ctx) { }
+    
     public override void OnEnter()
     {
         base.OnEnter();

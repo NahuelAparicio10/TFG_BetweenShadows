@@ -10,10 +10,11 @@ public class PlayerController : CharacterBase
     protected override void Awake()
     {
         base.Awake();
+        
         _ctx = new PlayerContext(gameObject, 
             GetComponent<PlayerInputs>(), 
             GetComponent<CharacterStats>(), 
-            GetComponent<CharacterHealthSystem>(), 
+            new CharacterHealthSystem(), 
             _movement,
             GetComponent<PlayerAnimation>());
         _movement.SetContextAndInitialize(_ctx);
@@ -23,6 +24,8 @@ public class PlayerController : CharacterBase
             _movement.AccumulateRootDelta(dp);
             _movement.AccumulateRootRotation(dr);
         };
+        
+        _ctx.Health.OnHealthChanged += _hud.UpdateHealthBar;
     }
 
     protected override void Start()
@@ -30,21 +33,5 @@ public class PlayerController : CharacterBase
         base.Start();
         _stateMachine.Set(new PlayerLocomotionState(_stateMachine, _ctx));
     }
-
-    protected override void Update()
-    {
-        base.Update();
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
-    protected override void LateUpdate()
-    {
-        base.LateUpdate();
-    }
-
 
 }
