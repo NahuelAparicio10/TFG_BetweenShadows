@@ -49,19 +49,8 @@ public class PlayerMovement : ICharacterMovement
     public void HandleAllMovement()
     {
         _groundChecker.CheckGround(_transform);
-        
-        // Target speed
-        Vector3 wishedVelocity = _desiredDir * TargetSpeed();
-        
-        // Acceleration & Decceleration in XZ plane
-        var linearVelocity = _rb.linearVelocity;
-        Vector3 currentPlanar = new Vector3(linearVelocity.x, 0f, linearVelocity.z);
-        Vector3 delta = wishedVelocity - currentPlanar;
 
-        float rate = (wishedVelocity.sqrMagnitude > 0.01f) ? _acceleration : _decceleration;
-
-        Vector3 change = Vector3.ClampMagnitude(delta, rate * Time.fixedDeltaTime);
-        _planarVelocity = currentPlanar + change;
+        _planarVelocity = CalculatePlanarVelocity();
         
         // Adapting to Slope
         if (_groundChecker.IsGrounded() && _groundChecker.OnWalkableSlope)
@@ -70,23 +59,35 @@ public class PlayerMovement : ICharacterMovement
         }
         
         // Blending RootMotion (if'ts active)
-        if (_useRootMotion && _rootDelta != Vector3.zero)
-        {
-            Vector3 rootVelocity = new Vector3(_rootDelta.x, 0f, _rootDelta.z) / Time.fixedDeltaTime;
-            _planarVelocity = Vector3.Lerp(_planarVelocity, rootVelocity, _rootMotionBlend);
-        }
+        RootMotionBlending();
         
-        var vy = _rb.linearVelocity.y;
-        _rb.linearVelocity = new Vector3(_planarVelocity.x, vy, _planarVelocity.z);
+        _rb.linearVelocity = new Vector3(_planarVelocity.x, _rb.linearVelocity.y, _planarVelocity.z);
         
         HandleRotation();
         
         _desiredDir = Vector3.zero;
         _rootDelta = Vector3.zero;
     }
+    
+    //Calculates planar velocity having in count accelerqation and decceleration in XZ plane
+    private Vector3 CalculatePlanarVelocity()
+    {
+        Vector3 wishedVelocity = _desiredDir * TargetSpeed();
+        
+        Vector3 currentPlanar = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+        
+        Vector3 delta = wishedVelocity - currentPlanar;
+
+        float rate = (wishedVelocity.sqrMagnitude > 0.01f) ? _acceleration : _decceleration;
+
+        Vector3 change = Vector3.ClampMagnitude(delta, rate * Time.fixedDeltaTime);
+        
+        return currentPlanar + change;
+    }
     public float TargetSpeed()
     {
         float speed = _ctx.Stats.GetStatValue(EnumsNagu.StatType.Speed);
+        
         if(_isSprinting)
         {
             return speed + _sprintSpeed;
@@ -94,15 +95,6 @@ public class PlayerMovement : ICharacterMovement
 
         return speed;
     }
-
-    public void SetDesiredDirection(Vector3 dir)
-    {
-        _desiredDir = dir.sqrMagnitude > 0.001f ? Vector3.ClampMagnitude(dir, 1f) : Vector3.zero;
-    }
-    public void SetSprint(bool isSprinting) => _isSprinting = isSprinting;
-    public void SetLockOn(Transform target) => _lockOnTarget = target;
-    public void SetRootMotion(bool enabled) => _useRootMotion = enabled;
-
 
     #region Rotation Handlers
 
@@ -132,9 +124,25 @@ public class PlayerMovement : ICharacterMovement
     #endregion
 
     #region Root Motion
+
+    private void RootMotionBlending()
+    {
+        if (_useRootMotion && _rootDelta != Vector3.zero)
+        {
+            Vector3 rootVelocity = new Vector3(_rootDelta.x, 0f, _rootDelta.z) / Time.fixedDeltaTime;
+            _planarVelocity = Vector3.Lerp(_planarVelocity, rootVelocity, _rootMotionBlend);
+        }
+    }
     public void AccumulateRootDelta(Vector3 delta) { _rootDelta += delta; }
     public void AccumulateRootRotation(Quaternion deltaRot) { /* RM Roation */ }
-
     #endregion
-
+    
+    #region Setters
+    
+    public void SetDesiredDirection(Vector3 dir) => _desiredDir = dir.sqrMagnitude > 0.001f ? Vector3.ClampMagnitude(dir, 1f) : Vector3.zero;
+    public void SetSprint(bool isSprinting) => _isSprinting = isSprinting;
+    public void SetLockOn(Transform target) => _lockOnTarget = target;
+    public void SetRootMotion(bool enabled) => _useRootMotion = enabled;
+    
+    #endregion
 }

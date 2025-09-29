@@ -5,7 +5,7 @@ public class PlayerContext : CharacterContext
     public PlayerInputs Inputs { get; }
     public InputBuffer Buffer { get; }
     public ICharacterMovement Movement { get; }
-    
+    public StaminaSystem Stamina { get; }
     public PlayerAnimation Animation { get; }
 
     public PlayerContext(GameObject owner,
@@ -13,12 +13,14 @@ public class PlayerContext : CharacterContext
         CharacterStats stats,
         CharacterHealthSystem health,
         ICharacterMovement movement, 
-        PlayerAnimation animation) : base(owner, stats, health)
+        PlayerAnimation animation,
+        StaminaSystem stamina) : base(owner, stats, health)
     {
         Inputs = inputs;
-        Buffer = Inputs?.Buffer ?? new InputBuffer(0.25f);
+        Buffer = Inputs.Buffer ?? new InputBuffer(0.25f);
         Movement = movement;
         Animation = animation;
+        Stamina = stamina;
     }
     
 }

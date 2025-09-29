@@ -97,7 +97,6 @@ public class PlayerLocomotionState : BaseState<PlayerContext>
         // Avoid dropping to Idle when turning: use the max of intent and actual velocity
         float speedTarget = Mathf.Max(speedParamFromVel, speedParamFromStick);
 
-        // Damp into Animator
         _ctx.Animation.SetSpeedDamped(speedTarget, dt);
     }
 

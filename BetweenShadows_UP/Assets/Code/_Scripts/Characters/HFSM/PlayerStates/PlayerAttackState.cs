@@ -21,11 +21,6 @@ public class PlayerAttackState : BaseState<PlayerContext>
         base.FixedTick(fixedDt);
     }
 
-    public override void HandleCommand(ICommand command)
-    {
-        base.HandleCommand(command);
-    }
-
     public override void OnExit()
     {
         _ctx.Movement.SetRootMotion(false);

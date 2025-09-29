@@ -19,8 +19,4 @@ MonoBehaviour:
   description: 
   weight: 0
   maxStack: 1
-  buffs:
-  - statType: 0
-    modifierType: 100
-    baseValue: 5
-    duration: 2
+  buffs: []
