@@ -6,17 +6,21 @@ public class PlayerController : CharacterBase
     private PlayerContext _ctx;
     [SerializeField] private PlayerMovement _movement;
     [SerializeField] private PlayerHUD _hud;
+    private StaminaSystem _stamina;
     
     protected override void Awake()
     {
         base.Awake();
+        _stamina = GetComponent<StaminaSystem>();
         
         _ctx = new PlayerContext(gameObject, 
             GetComponent<PlayerInputs>(), 
             GetComponent<CharacterStats>(), 
             new CharacterHealthSystem(), 
             _movement,
-            GetComponent<PlayerAnimation>());
+            GetComponent<PlayerAnimation>(),
+            _stamina);
+        
         _movement.SetContextAndInitialize(_ctx);
 
         GetComponent<RootMotionRelay>().OnRootMotion += (dp, dr) =>
