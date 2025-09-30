@@ -1,148 +1,119 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class PlayerMovement : ICharacterMovement
+public class PlayerMovement : MonoBehaviour
 {
-    [Header("Speeds:")] 
-    [SerializeField] private float _sprintSpeed = 2f; // This value is added to base speed value
-    [SerializeField] private float _acceleration = 18f;
-    [SerializeField] private float _decceleration = 22f;
-    [SerializeField] private float _rotationSpeed = 12f;
-
-    [Header("Ground:")] 
-    [SerializeField] private GroundChecker _groundChecker = new GroundChecker();
-    
-    [Header("Root Motion")]
-    [SerializeField] private bool _useRootMotion;
-    [SerializeField, Range(0f,1f)] private float _rootMotionBlend = 1f;
-
     private PlayerContext _ctx;
     private Rigidbody _rb;
-    private Transform _transform;
-
-    private bool _isSprinting;
-
-    private Transform _lockOnTarget;
-    private Vector3 _desiredDir;
-    private Vector3 _planarVelocity; // Axis X Z
-    private Vector3 _rootDelta;
+    private GroundChecker _groundChecker;
     
-    #region Properties
+    [Header("Top-down Movement")]
+    [SerializeField] private float _moveSpeed = 4.5f;
+    [SerializeField] private float _acceleration = 18f;
+    [SerializeField] private float _deceleration = 22f;
+
+    [Header("Rotation")]
+    [SerializeField] private float _rotationSpeed = 10f;
+    [SerializeField] private float _attackRotationSpeed = 6f; 
+
+    [Header("Sprint")]
+    [SerializeField] private float _sprintBonus = 2f; 
+    
+    private Vector3 _planarVel;          // XZ
+    private Vector3 _desiredDir;         // XZ normalizada (o cero)
+    private bool _isSprinting;
+    public void SetDesiredDirection(Vector3 dir) => _desiredDir = (dir.sqrMagnitude > 0.0001f) ? Vector3.ClampMagnitude(dir, 1f) : Vector3.zero;
+    public void SetSprint(bool v) => _isSprinting = v;
     public bool IsSprinting => _isSprinting;
-    public float SprintBonus => _sprintSpeed;
-    public bool IsLockedOn => _lockOnTarget != null;
-    public float RunSpeed => _ctx.Stats.GetStatValue(EnumsNagu.StatType.Speed);
-    public float SprintSpeed => RunSpeed + _sprintSpeed;
+    public bool IsLockedOn => _ctx != null && _ctx.LockOnSystem != null && _ctx.LockOnSystem.IsLockedOn;
+    public float RunSpeed => _ctx != null ? _ctx.Stats.GetStatValue(Enums.StatType.Speed) : _moveSpeed;
+    public float SprintSpeed => RunSpeed + _sprintBonus;
     public float CurrentPlanarSpeed => new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.z).magnitude;
-    #endregion
-   
-    public void SetContextAndInitialize(PlayerContext ctx)
+    public bool IsGrounded() => _groundChecker != null && _groundChecker.IsGrounded();
+    
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _groundChecker = GetComponent<GroundChecker>();
+    }
+
+    public void Initialize(PlayerContext ctx)
     {
         _ctx = ctx;
-        _rb = _ctx.Owner.GetComponent<Rigidbody>();
-        _rb.interpolation = RigidbodyInterpolation.Interpolate;
-        _transform = _ctx.Transform;
-
-        _ctx.Inputs.OnSprint += SetSprint;
     }
-    
+
     public void HandleAllMovement()
     {
-        _groundChecker.CheckGround(_transform);
-
-        _planarVelocity = CalculatePlanarVelocity();
+        _groundChecker.CheckGround(transform);
         
-        // Adapting to Slope
-        if (_groundChecker.IsGrounded() && _groundChecker.OnWalkableSlope)
+        if (_ctx.Animation.IsInteracting)
         {
-            _planarVelocity = _groundChecker.ProjectOnGround(_planarVelocity);
+            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
         }
-        
-        // Blending RootMotion (if'ts active)
-        RootMotionBlending();
-        
-        _rb.linearVelocity = new Vector3(_planarVelocity.x, _rb.linearVelocity.y, _planarVelocity.z);
-        
-        HandleRotation();
-        
-        _desiredDir = Vector3.zero;
-        _rootDelta = Vector3.zero;
-    }
-    
-    //Calculates planar velocity having in count accelerqation and decceleration in XZ plane
-    private Vector3 CalculatePlanarVelocity()
-    {
-        Vector3 wishedVelocity = _desiredDir * TargetSpeed();
-        
-        Vector3 currentPlanar = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
-        
-        Vector3 delta = wishedVelocity - currentPlanar;
-
-        float rate = (wishedVelocity.sqrMagnitude > 0.01f) ? _acceleration : _decceleration;
-
-        Vector3 change = Vector3.ClampMagnitude(delta, rate * Time.fixedDeltaTime);
-        
-        return currentPlanar + change;
-    }
-    public float TargetSpeed()
-    {
-        float speed = _ctx.Stats.GetStatValue(EnumsNagu.StatType.Speed);
-        
-        if(_isSprinting)
+        else
         {
-            return speed + _sprintSpeed;
+            float baseSpeed = _isSprinting ? SprintSpeed : RunSpeed;
+            float targetSpeed = baseSpeed * _desiredDir.magnitude;
+            Vector3 targetPlanar = _desiredDir * targetSpeed;
+
+            _planarVel = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+
+            bool speedingUp = targetPlanar.sqrMagnitude > _planarVel.sqrMagnitude;
+            float accel = speedingUp ? _acceleration : _deceleration;
+
+            _planarVel = Vector3.MoveTowards(_planarVel, targetPlanar, accel * Time.deltaTime);
+
+            _rb.linearVelocity = new Vector3(_planarVel.x, 0f, _planarVel.z);
         }
 
-        return speed;
-    }
-
-    #region Rotation Handlers
-
-    private void HandleRotation()
-    {
-        if (_lockOnTarget != null)
+        float rotSpeed = _ctx.Animation.IsInteracting ? _attackRotationSpeed : _rotationSpeed;
+        
+        if (_ctx.LockOnSystem.IsLockedOn)
         {
-            Vector3 toTarget = _lockOnTarget.position - _transform.position;
-            toTarget.y = 0f;
-            if (toTarget.sqrMagnitude > 0.001f)
-            {
-                ApplyRotation(toTarget.normalized, _rotationSpeed);
-                return;
-            }
+            RotateTowardsTarget(_rotationSpeed);
         }
-
-        if (_desiredDir.sqrMagnitude > 0.0001f)
+        else
         {
-            ApplyRotation(_desiredDir, _rotationSpeed);
+            RotateTowardsDirection(_desiredDir, rotSpeed);
         }
     }
-    private void ApplyRotation(Vector3 dir, float speed)
-    {
-        Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
-        _rb.MoveRotation(Quaternion.Slerp(_transform.rotation, targetRot, speed * Time.fixedDeltaTime));
-    }
-    #endregion
 
     #region Root Motion
-
-    private void RootMotionBlending()
+    private void OnAnimatorMove()
     {
-        if (_useRootMotion && _rootDelta != Vector3.zero)
-        {
-            Vector3 rootVelocity = new Vector3(_rootDelta.x, 0f, _rootDelta.z) / Time.fixedDeltaTime;
-            _planarVelocity = Vector3.Lerp(_planarVelocity, rootVelocity, _rootMotionBlend);
-        }
+        // Root motion activo TODO el ataque
+        if (!_ctx.Animation.IsInteracting) return;
+
+        // Posición: usa deltaPosition ajustado si tienes suelos inclinados (si no, directo)
+        Vector3 delta = _ctx.Animation.Animator.deltaPosition;
+        delta = _groundChecker.GetSlopeAdjustedRootMotion(delta);
+
+        _rb.MovePosition(_rb.position + new Vector3(delta.x, 0f, delta.z));
+
+        // Rotación: aplica deltaRotation del clip
+        Quaternion newRot = _rb.rotation * _ctx.Animation.Animator.deltaRotation;
+        _rb.MoveRotation(newRot);
     }
-    public void AccumulateRootDelta(Vector3 delta) { _rootDelta += delta; }
-    public void AccumulateRootRotation(Quaternion deltaRot) { /* RM Roation */ }
     #endregion
-    
-    #region Setters
-    
-    public void SetDesiredDirection(Vector3 dir) => _desiredDir = dir.sqrMagnitude > 0.001f ? Vector3.ClampMagnitude(dir, 1f) : Vector3.zero;
-    public void SetSprint(bool isSprinting) => _isSprinting = isSprinting;
-    public void SetLockOn(Transform target) => _lockOnTarget = target;
-    public void SetRootMotion(bool enabled) => _useRootMotion = enabled;
-    
+
+    #region Direcciones y Rotación
+
+    private void RotateTowardsTarget(float speed)
+    {
+       /* Vector3 dir = _ctx.LockOnSystem.GetDirectionToTargetNormalized(transform.position);
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) return;
+
+        Quaternion target = Quaternion.LookRotation(dir);
+        Quaternion smooth = Quaternion.Slerp(_rb.rotation, target, 1f - Mathf.Exp(-speed * Time.deltaTime));
+        _rb.MoveRotation(smooth);*/
+    }
+
+    private void RotateTowardsDirection(Vector3 dir, float speed)
+    {
+        if (dir.sqrMagnitude < 0.0001f) return;
+        Quaternion target = Quaternion.LookRotation(dir);
+        Quaternion smooth = Quaternion.Slerp(_rb.rotation, target, 1f - Mathf.Exp(-speed * Time.deltaTime));
+        _rb.MoveRotation(smooth);
+    }
     #endregion
 }

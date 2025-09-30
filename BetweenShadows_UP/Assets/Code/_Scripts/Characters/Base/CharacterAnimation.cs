@@ -5,7 +5,6 @@ public class CharacterAnimation : MonoBehaviour
 {
     protected Animator _animator;
     public Animator Animator => _animator;
-    
     public event Action OnHitFrame; // When does the animation will apply damage
     public event Action OnComboWindowOpen; // When the player can execute the next combo
     public event Action OnComboWindowClose; // Player won't be able to continue with the next combo (time passed)

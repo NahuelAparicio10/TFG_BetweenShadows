@@ -20,13 +20,13 @@ public class CharacterHealthSystem : IDamageable, ICurable
     public void Initialize(CharacterStats stats)
     {
         _stats = stats;
-        _healthStat = _stats.GetStat(EnumsNagu.StatType.Health);
-        _defenseStat = _stats.GetStat(EnumsNagu.StatType.Defense);
+        _healthStat = _stats.GetStat(Enums.StatType.Health);
+        _defenseStat = _stats.GetStat(Enums.StatType.Defense);
         _currentHealth = _healthStat.Value;
     }
     
     
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage, Enums.HitType type)
     {
         // Minimum 1 of dmg
         damage = Mathf.Max(damage - _defenseStat.Value, 1f); 
@@ -40,7 +40,7 @@ public class CharacterHealthSystem : IDamageable, ICurable
         Die();
     }
 
-    public virtual void TakeDamage(float damage, Vector3 hitPoint, Vector3 direction)
+    public virtual void TakeDamage(float damage, Vector3 hitPoint, Vector3 direction, Enums.HitType type)
     {
         damage = Mathf.Max(damage - _defenseStat.Value, 1f); 
         

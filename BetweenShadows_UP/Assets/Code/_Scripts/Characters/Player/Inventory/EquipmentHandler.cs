@@ -8,24 +8,23 @@ public class EquipmentHandler : MonoBehaviour
     [System.Serializable]
     public class EquipSlotBinding
     {
-        public EnumsNagu.EquipSlot slot;
+        public Enums.EquipSlot slot;
         public Transform socket;
     }
     
     [SerializeField] private List<EquipSlotBinding> _bindings = new();
     private CharacterStats _stats;
 
-    private readonly Dictionary<EnumsNagu.EquipSlot, EquipableItemData> _equipped = new();
-    private readonly Dictionary<EnumsNagu.EquipSlot, GameObject> _spawned = new();
+    private readonly Dictionary<Enums.EquipSlot, EquipableItemData> _equipped = new();
+    private readonly Dictionary<Enums.EquipSlot, GameObject> _spawned = new();
 
-    public event Action<EnumsNagu.EquipSlot, EquipableItemData> OnEquipped;
-    public event Action<EnumsNagu.EquipSlot, EquipableItemData> OnUnequipped;
+    public event Action<Enums.EquipSlot, EquipableItemData> OnEquipped;
+    public event Action<Enums.EquipSlot, EquipableItemData> OnUnequipped;
     
     private void Awake()
     {
         _stats = GetComponent<CharacterStats>();
     }
-    
     public bool Equip(EquipableItemData item)
     {
         if (item == null) return false;
@@ -61,7 +60,7 @@ public class EquipmentHandler : MonoBehaviour
         return true;
     }
     
-    public bool Unequip(EnumsNagu.EquipSlot slot)
+    public bool Unequip(Enums.EquipSlot slot)
     {
         if (!_equipped.TryGetValue(slot, out var item)) return false;
 
@@ -80,13 +79,13 @@ public class EquipmentHandler : MonoBehaviour
         return true;
     }
     
-    public EquipableItemData Get(EnumsNagu.EquipSlot slot)
+    public EquipableItemData Get(Enums.EquipSlot slot)
     {
         _equipped.TryGetValue(slot, out var i);
         return i;
     }
 
-    public WeaponData GetWeapon(EnumsNagu.EquipSlot slot = EnumsNagu.EquipSlot.Weapon) => Get(slot) as WeaponData;
+    public WeaponData GetWeapon(Enums.EquipSlot slot = Enums.EquipSlot.Weapon) => Get(slot) as WeaponData;
 
-    private Transform GetSocket(EnumsNagu.EquipSlot slot) => _bindings.Find(b => b.slot == slot)?.socket;
+    private Transform GetSocket(Enums.EquipSlot slot) => _bindings.Find(b => b.slot == slot)?.socket;
 }
