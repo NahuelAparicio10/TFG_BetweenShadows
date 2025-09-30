@@ -26,10 +26,10 @@
     border-bottom-color: rgba(255, 255, 255, 0);
     -unity-font-definition: resource('FlatSkin/Font/Roboto-Regular');
     -unity-font-style: bold;
-    transition-duration: 0.2s;
+    transition-duration: 0.25s;
 }
 
-.button:hover {
+.button:focus {
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
 }
