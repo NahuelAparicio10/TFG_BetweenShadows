@@ -10,6 +10,7 @@ public class PlayerAnimation : CharacterAnimation
     static readonly int HashDirY = Animator.StringToHash("dirY");
     static readonly int HashSpeed = Animator.StringToHash("speed");
     static readonly int InteractingBool = Animator.StringToHash("isInteracting");
+    static readonly int IsLockedBool = Animator.StringToHash("IsLocked");
     
     private bool _isInteracting = false;
     public bool IsInteracting => _isInteracting;
@@ -35,6 +36,8 @@ public class PlayerAnimation : CharacterAnimation
             }
         }
     }
+
+    public void SetIsLocked(bool b) => _animator.SetBool(IsLockedBool, b);
     public void SetInputValuesDamped(Vector2 inputMovement, float dt)
     {
         _animator.SetFloat(HashDirX, inputMovement.x, _inputDamp, dt);

@@ -21,8 +21,6 @@ public abstract class BaseObjectPool<T> : MonoBehaviour where T : Component, IPo
     // Optional Singleton pattern for specific Pools
     public static BaseObjectPool<T> Instance { get; private set; }
     
-
-    
     protected virtual void Awake()
     {
         if (Instance == null)
