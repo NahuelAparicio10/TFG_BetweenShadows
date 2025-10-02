@@ -16,6 +16,8 @@ public class ItemData : ScriptableObject
     public float weight;
     public int maxStack = 1;
 
+    public Dimensions SlotDimension;
+
     private void OnValidate()
     {
         #if UNITY_EDITOR
@@ -23,4 +25,11 @@ public class ItemData : ScriptableObject
             UnityEditor.EditorUtility.SetDirty(this);
         #endif
     }
+}
+
+[Serializable]
+public struct Dimensions
+{
+    public int Height;
+    public int Width;
 }
