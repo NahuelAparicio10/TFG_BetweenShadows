@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7492b73b61442fb88e115c95bc8bb5, type: 3}
+  m_Name: Sword Gei
+  m_EditorClassIdentifier: 
+  <uniqueID>k__BackingField: Sword from AByss
+  itemType: 0
+  itemName: Sword from AByss
+  icon: {fileID: 21300000, guid: cfb727031393c9245aa104a67333b725, type: 3}
+  description: 
+  weight: 0
+  maxStack: 1
+  SlotDimension:
+    Height: 2
+    Width: 1
+  equipSlot: 0
+  modifiers: []
+  prefab: {fileID: 0}
+  animatorOverride: {fileID: 0}
+  combos: []
