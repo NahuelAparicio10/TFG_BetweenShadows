@@ -35,6 +35,10 @@
     background-color: rgb(14, 14, 14);
     border-width: 1px;
     border-color: rgb(75, 75, 75);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
 }
 
 .visual-icon {

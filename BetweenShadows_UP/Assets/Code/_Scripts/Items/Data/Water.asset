@@ -20,6 +20,6 @@ MonoBehaviour:
   weight: 0
   maxStack: 1
   SlotDimension:
-    Height: 2
+    Height: 1
     Width: 1
   buffs: []
