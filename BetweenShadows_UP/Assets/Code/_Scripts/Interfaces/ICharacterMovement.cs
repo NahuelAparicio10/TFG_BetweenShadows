@@ -7,4 +7,5 @@ public interface ICharacterMovement
     void SetSprint(bool isSprinting);
     void SetRootMotion(bool enabled);
     void SetLockOn(Transform target);
+    bool IsGrounded();
 }

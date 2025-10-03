@@ -29,45 +29,4 @@ MonoBehaviour:
     value: 5
   prefab: {fileID: 6785117152285423144, guid: ad6d031a8a7c905439a44cca9a4ba18e, type: 3}
   animatorOverride: {fileID: 0}
-  lightCombo:
-  - animationName: 
-    staminaCost: 5
-    damage: 15
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  heavyCombo:
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
-  - animationName: 
-    staminaCost: 0
-    damage: 0
-    timeToNext: 0
-    cancelWindow: 0
+  combos: []

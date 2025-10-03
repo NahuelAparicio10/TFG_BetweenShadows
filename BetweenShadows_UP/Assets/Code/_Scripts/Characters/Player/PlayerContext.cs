@@ -1,26 +1,35 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerContext : CharacterContext
 {
     public PlayerInputs Inputs { get; }
-    public InputBuffer Buffer { get; }
-    public ICharacterMovement Movement { get; }
     public StaminaSystem Stamina { get; }
     public PlayerAnimation Animation { get; }
-
-    public PlayerContext(GameObject owner,
-        PlayerInputs inputs,
-        CharacterStats stats,
+    
+    public ComboController Combo { get; }
+    public PlayerMovement Movement { get; }
+    public EquipmentHandler PCEquipmentHandler { get; }
+    public PlayerLockOnSystem LockOnSystem { get; }
+    
+    public PlayerContext(
+        GameObject owner, 
+        CharacterStats stats, 
         CharacterHealthSystem health,
-        ICharacterMovement movement, 
+        PlayerInputs inputs,
+        StaminaSystem stamina,
         PlayerAnimation animation,
-        StaminaSystem stamina) : base(owner, stats, health)
+        ComboController combo,
+        PlayerMovement movement,
+        EquipmentHandler equipHandler,
+        PlayerLockOnSystem lockon
+        ) : base(owner, stats, health)
     {
         Inputs = inputs;
-        Buffer = Inputs.Buffer ?? new InputBuffer(0.25f);
-        Movement = movement;
-        Animation = animation;
         Stamina = stamina;
+        Animation = animation;
+        Combo = combo;
+        Movement = movement;
+        PCEquipmentHandler = equipHandler;
+        LockOnSystem = lockon;
     }
-    
 }

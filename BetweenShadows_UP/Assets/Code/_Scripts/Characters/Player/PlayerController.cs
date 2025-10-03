@@ -1,41 +1,97 @@
+﻿using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInputs))]
-public class PlayerController : CharacterBase
+[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(StaminaSystem))]
+[RequireComponent(typeof(PlayerAnimation))]
+[RequireComponent(typeof(PlayerMovement))]
+public class PlayerController : MonoBehaviour
 {
-    private PlayerContext _ctx;
-    [SerializeField] private PlayerMovement _movement;
-    [SerializeField] private PlayerHUD _hud;
-    private StaminaSystem _stamina;
+    [SerializeField] private PlayerLocomotion _locomotion;
+    private PlayerContext _context;
+    private WeaponHandler _weaponHandler;
+    [SerializeField] private PlayerInteractable _interactable;
     
-    protected override void Awake()
+    private Enums.CharacterState _currentState;
+    
+    private void Awake()
     {
-        base.Awake();
-        _stamina = GetComponent<StaminaSystem>();
+        var comboController = new ComboController();
+        _weaponHandler = GetComponent<WeaponHandler>();
         
-        _ctx = new PlayerContext(gameObject, 
-            GetComponent<PlayerInputs>(), 
-            GetComponent<CharacterStats>(), 
-            new CharacterHealthSystem(), 
-            _movement,
-            GetComponent<PlayerAnimation>(),
-            _stamina);
+        var stats = GetComponent<CharacterStats>();
+        var healthSystem = new CharacterHealthSystem();
+        var inputs = GetComponent<PlayerInputs>();
+        var stamina = GetComponent<StaminaSystem>();
+        var animation = GetComponent<PlayerAnimation>();
+        var movement = GetComponent<PlayerMovement>();
+        var equipmentHandler = GetComponent<EquipmentHandler>();
+        var lockOnSystem = GetComponent<PlayerLockOnSystem>();
         
-        _movement.SetContextAndInitialize(_ctx);
+        _context = new PlayerContext
+            (
+                gameObject,
+                stats,
+                healthSystem,
+                inputs,
+                stamina,
+                animation,
+                comboController,
+                movement,
+                equipmentHandler,
+                lockOnSystem
+            );
+        
+        movement.Initialize(_context);
+        _locomotion.Initialize(_context);
 
-        GetComponent<RootMotionRelay>().OnRootMotion += (dp, dr) =>
+        _context.Combo.TryConsumeStamina = _context.Stamina.TryConsumeStamina;
+        
+        inputs.OnSprint += (pressed) => { _context.Movement.SetSprint(pressed); };
+        
+        inputs.OnInteract += () =>
         {
-            _movement.AccumulateRootDelta(dp);
-            _movement.AccumulateRootRotation(dr);
+            _interactable.InteractPerformed(); 
         };
-        
-        _ctx.Health.OnHealthChanged += _hud.UpdateHealthBar;
+
+        inputs.OnAttackInput += AttackInput_perfomed;
+
+        animation.OnInteracting += on =>
+        {
+            comboController.OnAnimationInteractingChanged(on);
+        };
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-        _stateMachine.Set(new PlayerLocomotionState(_stateMachine, _ctx));
+        _weaponHandler.Initialize(_context);
     }
 
+    private void Update()
+    {
+        _locomotion.UpdateLocomotion();
+        
+        _context.Combo.UpdateComboController(_context.Movement.IsGrounded(), _currentState, _context.Animation.PlayTargetAnimation);
+    }
+
+    private void FixedUpdate()
+    {
+        _context.Movement.HandleAllMovement();
+    }
+    
+    public void ChangeCharacterState(Enums.CharacterState newState)
+    {
+        if(_currentState == newState) return;
+
+        _currentState = newState;
+    }
+
+    #region InputEvents
+    
+    private void AttackInput_perfomed(Enums.AttackInputs atkInput)
+    {
+        _context.Combo.AddInputToSequence(atkInput, _currentState, _context.Animation.PlayTargetAnimation);
+    }
+    #endregion
 }

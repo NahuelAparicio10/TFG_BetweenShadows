@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ItemData : ScriptableObject
 {
     [field: SerializeField] public string uniqueID { get; private set; }
-    public EnumsNagu.ItemType itemType;
+    public Enums.ItemType itemType;
     
     [Header("General Information")] 
     public string itemName;

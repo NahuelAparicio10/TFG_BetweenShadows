@@ -3,44 +3,53 @@ using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour
 {
-    [SerializeField] private EnumsNagu.EquipSlot _weaponSlot = EnumsNagu.EquipSlot.Weapon;
+    [SerializeField] private Enums.EquipSlot _weaponSlot = Enums.EquipSlot.Weapon;
     
+    private PlayerContext _ctx;
     private EquipmentHandler _equipmentHandler;
-    private Animator _animator;
     private RuntimeAnimatorController _baseController;
-    
     public WeaponData CurrentWeapon { get; private set; }
-
-    public WeaponData weapon;
-    private void Awake()
+    public WeaponData baseWeapon; // This weapons is hands (you can't be without weapon or gg)
+    public void Initialize(PlayerContext ctx)
     {
-        _equipmentHandler = GetComponent<EquipmentHandler>();
-        _animator = GetComponent<Animator>();
-        _baseController = _animator.runtimeAnimatorController;
+        _ctx = ctx;
+        _equipmentHandler = _ctx.PCEquipmentHandler;
+        _baseController = _ctx.Animation.Animator.runtimeAnimatorController;
+
         _equipmentHandler.OnEquipped += OnEquipped;
         _equipmentHandler.OnUnequipped += OnUnequipped;
 
+        _equipmentHandler.Equip(baseWeapon);
     }
+    private void SetPlayerContext(PlayerContext ctx) => _ctx = ctx;
 
-    private void Start()
-    {
-        _equipmentHandler.Equip(weapon);
-
-    }
-
-    private void OnEquipped(EnumsNagu.EquipSlot slot, EquipableItemData item)
+    private void OnEquipped(Enums.EquipSlot slot, EquipableItemData item)
     {
         if(slot != _weaponSlot) return;
         CurrentWeapon = item as WeaponData;
-       // _animator.runtimeAnimatorController = CurrentWeapon.animatorOverride;
+        _ctx.Combo.currentWeapon = CurrentWeapon;
+        
+        if (CurrentWeapon.animatorOverride == null)
+        {
+            _ctx.Animation.Animator.runtimeAnimatorController = _baseController;
+            return;
+        }
+        
+        _ctx.Animation.Animator.runtimeAnimatorController = CurrentWeapon.animatorOverride;
     }
-    private void OnUnequipped(EnumsNagu.EquipSlot slot, EquipableItemData item)
+    private void OnUnequipped(Enums.EquipSlot slot, EquipableItemData item)
     {
         if(slot != _weaponSlot) return;
-        CurrentWeapon = null;
-        _animator.runtimeAnimatorController = _baseController;
-
+        CurrentWeapon = baseWeapon;
+        _ctx.Combo.currentWeapon = baseWeapon;
+        _ctx.Animation.Animator.runtimeAnimatorController = _baseController;
     }
     
-    public bool HasWeapon() => CurrentWeapon != null;
+    public bool HasWeapon() => CurrentWeapon != baseWeapon;
+    
+    private void OnDestroy()
+    {
+        _equipmentHandler.OnEquipped -= OnEquipped;
+        _equipmentHandler.OnUnequipped -= OnUnequipped;
+    }
 }

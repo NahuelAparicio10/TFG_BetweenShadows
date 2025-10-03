@@ -26,7 +26,7 @@ public class ItemStack
     {
         switch (data.itemType)
         {
-            case EnumsNagu.ItemType.Consumable:
+            case Enums.ItemType.Consumable:
                 return TryUseConsumable(user);
             // case Enums.ItemType.Equipable:
             //     return TryEquip(user);
