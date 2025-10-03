@@ -7,7 +7,7 @@ using UnityEngine;
 public class CharacterStat
 {
     public float baseValue;
-    public EnumsNagu.StatType statTypeAffected;
+    public Enums.StatType statTypeAffected;
     
     private bool _reCalculate;
     private float _value;
@@ -34,7 +34,7 @@ public class CharacterStat
         _readStatModifiers = _statsModifiers.AsReadOnly();
     }
 
-    public CharacterStat(float v, EnumsNagu.StatType type) : this()
+    public CharacterStat(float v, Enums.StatType type) : this()
     {
         baseValue = v;
         statTypeAffected = type;

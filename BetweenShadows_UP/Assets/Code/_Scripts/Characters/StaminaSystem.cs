@@ -24,7 +24,7 @@ public class StaminaSystem : MonoBehaviour
     
     private void Start()
     {
-        _maxStamina = GetComponent<CharacterStats>().GetStat(EnumsNagu.StatType.Stamina);
+        _maxStamina = GetComponent<CharacterStats>().GetStat(Enums.StatType.Stamina);
         _currentStamina = _maxStamina.Value;
     }
 
@@ -39,17 +39,18 @@ public class StaminaSystem : MonoBehaviour
             HandleStaminaRecover();
         }
     }
-    public bool TryConsumeStamina(float cost, PlayerHUD hud)
+    public bool TryConsumeStamina(float cost)
     {
         if (!HasStaminaToAction(cost)) return false;
         OnConsumeStamina(cost);
-        hud.UpdateStamina(_currentStamina, _maxStamina.Value);
+       // hud.UpdateStamina(_currentStamina, _maxStamina.Value);
         return true;
     }
     public virtual void OnConsumeStamina(float amount)
     {
         _currentStamina = Mathf.Max(_currentStamina - amount, 0f);
         _recoveryTimer = 0;
+        OnStaminaModifies?.Invoke();
     }
 
     private void HandleStaminaRecover()
