@@ -19,4 +19,7 @@ MonoBehaviour:
   description: 
   weight: 0
   maxStack: 1
+  SlotDimension:
+    Height: 0
+    Width: 0
   buffs: []

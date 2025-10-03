@@ -11,10 +11,12 @@ public class ItemData : ScriptableObject
     
     [Header("General Information")] 
     public string itemName;
-    public Image icon;
+    public Sprite icon;
     [TextArea] public string description;
     public float weight;
     public int maxStack = 1;
+
+    public Dimensions SlotDimension;
 
     private void OnValidate()
     {
@@ -23,4 +25,11 @@ public class ItemData : ScriptableObject
             UnityEditor.EditorUtility.SetDirty(this);
         #endif
     }
+}
+
+[Serializable]
+public struct Dimensions
+{
+    public int Height;
+    public int Width;
 }
