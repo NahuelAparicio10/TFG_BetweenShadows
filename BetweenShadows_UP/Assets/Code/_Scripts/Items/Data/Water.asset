@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9dfa6e7b685e1ee4f8bc93fcfedebfdf, type: 3}
-  m_Name: ConsumableItemData
+  m_Name: Water
   m_EditorClassIdentifier: 
-  <uniqueID>k__BackingField: 
-  itemType: 0
-  itemName: 
+  <uniqueID>k__BackingField: Water
+  itemType: 1
+  itemName: Water
   icon: {fileID: 0}
-  description: 
+  description: Water test hye
   weight: 0
   maxStack: 1
   SlotDimension:
-    Height: 0
-    Width: 0
+    Height: 2
+    Width: 1
   buffs: []
