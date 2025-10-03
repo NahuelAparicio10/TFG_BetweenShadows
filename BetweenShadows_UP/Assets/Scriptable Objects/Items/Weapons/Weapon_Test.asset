@@ -19,6 +19,9 @@ MonoBehaviour:
   description: miau miau miau
   weight: 5
   maxStack: 1
+  SlotDimension:
+    Height: 0
+    Width: 0
   equipSlot: 0
   modifiers:
   - statTypeAffected: 3

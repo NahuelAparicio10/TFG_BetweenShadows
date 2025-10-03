@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UIElements;
 
 public class ItemVisual : VisualElement
@@ -14,10 +14,9 @@ public class ItemVisual : VisualElement
         style.width = m_Item.SlotDimension.Width * PlayerInventory.SlotDimension.Width;
         style.visibility = Visibility.Hidden;
 
-        VisualElement icon = new VisualElement
-        {
-            //style = { backgroundImage = m_Item.icon.mainTexture }
-        };
+        VisualElement icon = new VisualElement();
+
+        icon.style.backgroundImage = new StyleBackground(m_Item.icon);
         Add(icon);
 
         icon.AddToClassList("visual-icon");

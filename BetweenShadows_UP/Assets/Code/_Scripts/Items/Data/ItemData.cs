@@ -11,7 +11,7 @@ public class ItemData : ScriptableObject
     
     [Header("General Information")] 
     public string itemName;
-    public Image icon;
+    public Sprite icon;
     [TextArea] public string description;
     public float weight;
     public int maxStack = 1;
